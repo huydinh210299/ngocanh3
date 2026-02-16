@@ -1,24 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>New Year With You ❤️</title>
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
-    body {
+    * {
+        box-sizing: border-box;
         margin: 0;
-        overflow: hidden;
+        padding: 0;
+    }
+
+    html, body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
         background: #000;
         font-family: 'Playfair Display', serif;
     }
 
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+
     .container {
-        position: absolute;
+        position: relative;
         width: 100%;
-        height: 100%;
+        min-height: 100vh;
         display: flex;
-        z-index: 10;
+        z-index: 2;
     }
 
     .left {
@@ -31,29 +47,22 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        color: #ffffff;
         padding: 40px;
         text-align: center;
-        animation: cinematicFade 3s ease forwards;
+        color: #ffffff;
+        animation: fadeIn 2s ease forwards;
         opacity: 0;
-        transform: translateX(50px);
     }
 
-    @keyframes cinematicFade {
-        to { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes whiteBlink {
-        0%,100% { text-shadow: 0 0 10px rgba(255,255,255,0.6); }
-        50% { text-shadow: 0 0 35px rgba(255,255,255,1); }
+    @keyframes fadeIn {
+        to { opacity: 1; }
     }
 
     .right h1 {
-        font-family: 'Playfair Display', serif;
         font-size: 48px;
-        letter-spacing: 2px;
         margin-bottom: 20px;
-        animation: whiteBlink 2.5s infinite ease-in-out;
+        text-shadow: 0 0 20px rgba(255,255,255,0.8);
+        word-break: break-word;
     }
 
     .right p {
@@ -61,7 +70,8 @@
         font-size: 30px;
         line-height: 1.6;
         margin-bottom: 30px;
-        animation: whiteBlink 3s infinite ease-in-out;
+        text-shadow: 0 0 15px rgba(255,255,255,0.7);
+        word-break: break-word;
     }
 
     .photo img {
@@ -73,10 +83,42 @@
         box-shadow: 0 0 40px rgba(255,255,255,0.6);
     }
 
-    canvas {
-        position: absolute;
-        left: 0;
-        top: 0;
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+
+        body {
+            overflow-y: auto;
+        }
+
+        .container {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .left {
+            display: none;
+        }
+
+        .right {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+
+        .right h1 {
+            font-size: 28px;
+        }
+
+        .right p {
+            font-size: 20px;
+        }
+
+        .photo img {
+            width: 160px;
+            height: 160px;
+        }
     }
 </style>
 </head>
@@ -90,8 +132,9 @@
         <h1>Gửi Em ❤️</h1>
         <p>
             Chúc bông hoa của anh một năm mới thật dịu dàng, 
-            mọi cố gằng của em đều sẽ nở hoa đúng lúc. Và anh sẽ là người 
-            chăm sóc bông hoa ấy thêm nở rộ. Đặt niềm tin vào người trồng hoa này và yêu anh nhé. Yêu em 💖
+            mọi cố gắng của em đều sẽ nở hoa đúng lúc. 
+            Anh sẽ luôn là người chăm sóc bông hoa ấy thêm rực rỡ. 
+            Đặt niềm tin vào người trồng hoa này nhé. Yêu em 💖
         </p>
         <div class="photo">
             <img src="./eiu.jpg" alt="Ảnh người yêu">
@@ -107,17 +150,16 @@ camera.position.z = 12;
 
 const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.body.appendChild(renderer.domElement);
 
-/* ===== LIGHT ===== */
 scene.add(new THREE.AmbientLight(0xffffff, 0.7));
 
 const pinkLight = new THREE.PointLight(0xff2a8a, 3, 50);
 pinkLight.position.set(5,5,5);
 scene.add(pinkLight);
 
-/* ===== HEART ===== */
+/* HEART */
 const heartShape = new THREE.Shape();
 heartShape.moveTo(0, 2);
 heartShape.bezierCurveTo(0, 2, -2, 4, -4, 2);
@@ -136,10 +178,10 @@ const geometry = new THREE.ExtrudeGeometry(heartShape, {
 });
 
 const material = new THREE.MeshPhysicalMaterial({
-    color: 0xff2a6d,  // hồng đậm
+    color: 0xff2a6d,
     metalness: 0.2,
     roughness: 0.05,
-    transmission: 0.5,
+    transmission: 0.6,
     thickness: 1,
     clearcoat: 1,
     emissive: 0xff0077,
@@ -147,24 +189,10 @@ const material = new THREE.MeshPhysicalMaterial({
 });
 
 const heart = new THREE.Mesh(geometry, material);
-heart.position.x = -4;
-heart.scale.set(0.9,0.9,0.9);
 scene.add(heart);
 
-/* Glow */
-const glowMaterial = new THREE.MeshBasicMaterial({
-    color: 0xff66cc,
-    side: THREE.BackSide,
-    transparent: true,
-    opacity: 0.5
-});
-const glow = new THREE.Mesh(geometry, glowMaterial);
-glow.position.x = -4;
-glow.scale.set(1,1,1);
-scene.add(glow);
-
-/* ===== PARTICLES ===== */
-const particleCount = 1000;
+/* PARTICLES */
+const particleCount = 600;
 const positions = new Float32Array(particleCount * 3);
 
 for (let i = 0; i < particleCount * 3; i++) {
@@ -175,32 +203,44 @@ const particlesGeometry = new THREE.BufferGeometry();
 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
 const particlesMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,   // blink trắng
+    color: 0xffffff,
     size: 0.12,
     transparent: true,
-    opacity: 0.9
+    opacity: 0.7
 });
 
 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 scene.add(particles);
 
-/* ===== ANIMATION ===== */
+/* RESPONSIVE */
+function adjustHeart() {
+    if (window.innerWidth <= 768) {
+        const scaleFactor = window.innerWidth / 700;
+        const finalScale = Math.min(scaleFactor, 0.9);
+
+        heart.scale.set(finalScale, finalScale, finalScale);
+        heart.position.set(0, 0, -3);
+        camera.position.z = 15;
+    } else {
+        heart.scale.set(1, 1, 1);
+        heart.position.set(-4, 0, 0);
+        camera.position.z = 12;
+    }
+}
+
+adjustHeart();
+
+/* ANIMATION */
 const clock = new THREE.Clock();
 
 function animate() {
     requestAnimationFrame(animate);
     const time = clock.getElapsedTime();
 
-    const scale = 1 + Math.sin(time * 2.5) * 0.15;
-    heart.scale.set(scale, scale, scale);
-    glow.scale.set(scale + 0.08, scale + 0.08, scale + 0.08);
+    heart.rotation.y += 0.004;
 
-    heart.rotation.y += 0.005;
-    glow.rotation.y += 0.005;
-
-    material.emissiveIntensity = 0.8 + Math.sin(time * 3) * 0.5;
-
-    particles.rotation.y += 0.001;
+    material.emissiveIntensity = 0.8 + Math.sin(time * 3) * 0.4;
+    particles.rotation.y += 0.0007;
 
     renderer.render(scene, camera);
 }
@@ -211,6 +251,7 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth/window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    adjustHeart();
 });
 </script>
 
